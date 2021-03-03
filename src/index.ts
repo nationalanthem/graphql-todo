@@ -1,37 +1,21 @@
 import 'reflect-metadata'
-import express, { Application } from 'express'
+import express from 'express'
 import { createConnection } from 'typeorm'
-import { ApolloServer, gql } from 'apollo-server-express'
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`
-
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-}
-
-const apolloServer = new ApolloServer({ typeDefs, resolvers })
-
-const app = express()
-
-apolloServer.applyMiddleware({ app })
-
-app.use(express.json())
-
-const main = async (app: Application) => {
+import { ApolloServer } from 'apollo-server-express'
+import { buildSchema } from 'type-graphql'
+import { TodoResolver } from './resolvers'
+;(async () => {
   try {
+    const app = express()
     await createConnection()
+    const apolloServer = new ApolloServer({
+      schema: await buildSchema({ resolvers: [TodoResolver] }),
+    })
+    apolloServer.applyMiddleware({ app })
     app.listen(3001, () =>
       console.log('Listening at http://localhost:3001' + apolloServer.graphqlPath)
     )
   } catch (e) {
     console.log(e)
   }
-}
-
-main(app)
+})()
