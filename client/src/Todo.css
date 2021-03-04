@@ -1,0 +1,24 @@
+.todo {
+  border: 1px solid black;
+  width: 50%;
+  padding: 1em;
+  margin: 1em auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.todo-delete {
+  position: absolute;
+  top: 0;
+  right: -1em;
+  cursor: pointer;
+}
+
+.todo-delete:hover {
+  color: red;
+}
+
+.todo:hover .todo-delete {
+  right: 0.5em;
+}
